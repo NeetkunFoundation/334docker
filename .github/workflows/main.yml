@@ -8,21 +8,18 @@ on:
       - "*"
 
 jobs:
-  build:
-    name: build
+  push_to_registry:
+    name: Push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Check out the repo
         uses: actions/checkout@v2
-
-      - name: login
-        run: docker login docker.pkg.github.com -u owner -p ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push image
+      - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
-        env:
-          DOCKER_BUILDKIT: 1
         with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
           repository: NeetkunFoundation/334docker
-          tags: docker.pkg.github.com/NeetkunFoundation/334docker:latest
+          tag_with_ref: true
+

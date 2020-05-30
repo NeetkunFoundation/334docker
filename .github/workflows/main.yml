@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "*"
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: login
+        run: docker login docker.pkg.github.com -u owner -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        env:
+          DOCKER_BUILDKIT: 1
+        with:
+          registry: docker.pkg.github.com
+          repository: NeetkunFoundation/334docker
+          tags: docker.pkg.github.com/NeetkunFoundation/334docker:latest
